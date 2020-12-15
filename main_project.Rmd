@@ -56,5 +56,6 @@ print(modFit$finalModel)
 predict(modFit,newdata = testing)
 fancyRpartPlot(modFit$finalModel)
 ```
-##conclucions
-without the classe variable in the testing data, it not possible to say if the model classified in a good way, but seen that only has 3 of the 5 classes it is possible that it fails. it tried to used other models like a random forest but it takes more than 30 min.
+  
+## Conclusion 
+Without the classe variable in the testing data, it not possible to say if the model classified in a good way, but seen that only has 3 of the 5 classes it is possible that it fails. it tried to used other models like a random forest but it takes more than 30 min.
