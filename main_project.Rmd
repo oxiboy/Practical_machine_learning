@@ -10,14 +10,14 @@ output:
 
 Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways
 
-```{r packs,echo=T}
-install.packages('corrplot')
-```
+
 ```{r library,echo=T}
-suppressMessages(library(dplyr))
-suppressMessages(library("PerformanceAnalytics"))
-library(corrplot)
-library(caret)
+suppressWarnings(suppressMessages(library(dplyr)))
+suppressWarnings(suppressMessages(library("PerformanceAnalytics")))
+suppressWarnings(suppressMessages(library(corrplot)))
+suppressWarnings(suppressMessages(library(caret)))
+suppressWarnings(suppressMessages(library(rattle)))
+suppressWarnings(suppressMessages(library(rattle)))
 ```
 
 
@@ -51,5 +51,10 @@ summary(training)
 ## Training the network
 
 ```{r training,echo=T}
-modFit<-train(classe~.,data=training,prox=T,method="rf")
+modFit<-train(classe~.,data=training,method="rpart")
+print(modFit$finalModel)
+predict(modFit,newdata = testing)
+fancyRpartPlot(modFit$finalModel)
 ```
+##conclucions
+without the classe variable in the testing data, it not possible to say if the model classified in a good way, but seen that only has 3 of the 5 classes it is possible that it fails. it tried to used other models like a random forest but it takes more than 30 min.
