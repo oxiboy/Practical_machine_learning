@@ -1,0 +1,55 @@
+---
+title: "Practice Machine Learning"
+author: "Andres Felipe Lagos Ruiz"
+date: "12/12/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+## Introdution
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways
+
+```{r packs,echo=T}
+install.packages('corrplot')
+```
+```{r library,echo=T}
+suppressMessages(library(dplyr))
+suppressMessages(library("PerformanceAnalytics"))
+library(corrplot)
+library(caret)
+```
+
+
+## Preprocesing of the data
+the fist step loading the data
+```{r setup,echo=T}
+download.file("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv","training.csv")
+download.file("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv","testing.csv")
+training<-read.csv("training.csv")
+testing<-read.csv("testing.csv")
+```
+taking only some variables
+```{r preprocesing,echo=T}
+training$user_name=as.factor(training$user_name)
+testing$user_name=as.factor(testing$user_name)
+training$classe=as.factor(training$classe)
+#using only the variables that start with gyros,accel and magnet
+training<-select(training,user_name,grep('^accel|^gyros|^magnet',names(training)),classe)
+testing<-select(testing,user_name,grep('^accel|^gyros|^magnet',names(testing)))
+#searching for nulls
+which(is.na(training))
+correlation<-cor(training[, -c(1,38)])
+co<-abs(correlation)>0.8
+which(co==T, arr.ind=TRUE)
+#it is deleted the variables 
+training<-training[,-c(11,16,18,21,30)]
+testing<-testing[,-c(11,16,18,21,30)]
+summary(training)
+
+```
+## Training the network
+
+```{r training,echo=T}
+modFit<-train(classe~.,data=training,prox=T,method="rf")
+```
